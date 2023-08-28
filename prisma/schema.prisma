@@ -9,3 +9,33 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Publisher {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name  String
+  siret Int     @unique
+  phone String?
+
+  games Game[]
+
+  @@map("publishers")
+}
+
+model Game {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title       String
+  price       Int?
+  tags        String[]
+  releaseDate DateTime
+
+  publisherId Int
+  publisher   Publisher @relation(fields: [publisherId], references: [id])
+
+  @@map("games")
+}
