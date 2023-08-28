@@ -17,4 +17,11 @@ describe('GameController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  describe('Create endpoint', () => {
+    it.todo('should throw if any required data was not provided');
+    it.todo('should throw if publisher doesn`t exist');
+    it.todo('should throw if any provided data is not valiable');
+    it.todo('should return 201 and the created game');
+  });
 });
