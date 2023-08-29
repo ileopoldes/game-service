@@ -3,7 +3,7 @@ import { PublisherModule } from './publisher/publisher.module';
 import { GameModule } from './game/game.module';
 import { RepositoryModule } from './repository/repository.module';
 import { APP_FILTER } from '@nestjs/core';
-import { GlobalExceptionFilter } from './middleware/global-exception.filter';
+import { GlobalExceptionFilter } from './middlewares/global-exception.filter';
 
 @Module({
   imports: [PublisherModule, GameModule, RepositoryModule],

@@ -1,12 +1,12 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateGameDto, UpdateGameDto } from './dto';
 import { RepositoryService } from '../repository/repository.service';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { Game } from '@prisma/client';
 
 @Injectable()
 export class GameService {
   constructor(private readonly repository: RepositoryService) {}
-  async create(createGameDto: CreateGameDto) {
+  async create(createGameDto: CreateGameDto): Promise<CreateGameDto> {
     try {
       const publisher = await this.repository.publisher.findUnique({
         where: {
@@ -30,16 +30,48 @@ export class GameService {
     }
   }
 
-  findAll() {
-    return `This action returns all game`;
+  async findAll(): Promise<Game[]> {
+    try {
+      /* TODO: Bender - implemente pagination*/
+      const games = await this.repository.game.findMany();
+
+      if (!games) {
+        throw new NotFoundException('No records found');
+      }
+
+      return games;
+    } catch (error) {
+      Logger.debug(error);
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} game`;
+  async findOne(id: number): Promise<Game> {
+    try {
+      const game = await this.repository.game.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!game) {
+        throw new NotFoundException(`No game with id ${id} was found`);
+      }
+
+      return game;
+    } catch (error) {
+      Logger.debug(error);
+      throw error;
+    }
   }
 
   update(id: number, updateGameDto: UpdateGameDto) {
-    return `This action updates a #${id} game`;
+    console.log(
+      `>>>> Bender service: ${id} - ${JSON.stringify(updateGameDto)}`,
+    );
+    return `This action updates a #${id} game - with: ${JSON.stringify(
+      updateGameDto,
+    )}`;
   }
 
   remove(id: number) {

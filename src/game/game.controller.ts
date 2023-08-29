@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { GameService } from './game.service';
 import { CreateGameDto } from './dto/create-game.dto';
@@ -26,17 +28,28 @@ export class GameController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     return this.gameService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDto) {
+  update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() updateGameDto: UpdateGameDto,
+  ) {
+    const hasAtLeastOneField = Object.keys(updateGameDto).some(
+      (key) => updateGameDto[key] !== undefined,
+    );
+    // TODO - Bender - criar unit test para verificar isto aqui
+    if (!hasAtLeastOneField) {
+      throw new BadRequestException('At least one field should be provided');
+    }
+
     return this.gameService.update(+id, updateGameDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     return this.gameService.remove(+id);
   }
 }
