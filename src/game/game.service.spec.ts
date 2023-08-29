@@ -1,22 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Publisher } from '@prisma/client';
 import { GameService } from './game.service';
+import { CreateGameDto } from './dto';
 import { RepositoryService } from '../repository/repository.service';
-import { CreateGameDto } from './dto/create-game.dto';
 
 describe('GameService', () => {
   let service: GameService;
-  let findUniqueMock: jest.Mock;
+  const findUniqueMock = jest.fn();
+  const createMock = jest.fn();
 
-  const dto: CreateGameDto = {
-    price: 0,
-    publisherId: 666,
+  const createGameDto: CreateGameDto = {
+    price: 49.99,
+    publisherId: 1,
     releaseDate: new Date(),
-    tags: [],
+    tags: ['Action', 'Adventure'],
     title: 'test game',
   };
 
-  /*
   const mockPublisher: Publisher = {
     id: 1,
     name: 'Publisher 1',
@@ -25,31 +25,42 @@ describe('GameService', () => {
     createdAt: new Date(),
     updatedAt: new Date(),
   };
-  */
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [GameService, RepositoryService],
-    })
-      .overrideProvider(RepositoryService)
-      .useValue({
-        provide: RepositoryService,
-        useValue: {
-          publisher: {
-            findUnique: findUniqueMock,
+      providers: [
+        GameService,
+        {
+          provide: RepositoryService,
+          useValue: {
+            publisher: {
+              findUnique: findUniqueMock,
+            },
+            game: {
+              create: createMock,
+            },
           },
         },
-      })
-      .compile();
+      ],
+    }).compile();
 
-    service = module.get<GameService>(GameService);
+    service = await module.get<GameService>(GameService);
   });
 
   describe('create', () => {
     it('should throw an error for non-existing user', async () => {
-      await expect(service.create(dto)).rejects.toThrowError(
+      createGameDto.publisherId = 666;
+      findUniqueMock.mockReturnValue(null);
+      await expect(service.create(createGameDto)).rejects.toThrowError(
         'Publisher not found',
       );
+    });
+
+    it('should create a new game', async () => {
+      findUniqueMock.mockResolvedValue(mockPublisher);
+      createMock.mockResolvedValue(createGameDto);
+      const result = await service.create(createGameDto);
+      expect(result).toBe(createGameDto);
     });
   });
 });

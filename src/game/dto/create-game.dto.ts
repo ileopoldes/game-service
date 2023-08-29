@@ -1,10 +1,11 @@
+import { Transform } from 'class-transformer';
 import {
   IsArray,
-  IsDate,
   IsNotEmpty,
   IsNumber,
   IsString,
   IsOptional,
+  IsDate,
 } from 'class-validator';
 
 export class CreateGameDto {
@@ -24,7 +25,8 @@ export class CreateGameDto {
   @IsOptional()
   tags: string[];
 
-  @IsDate()
   @IsNotEmpty()
+  @Transform(({ value }) => new Date(value))
+  @IsDate()
   releaseDate: Date;
 }
