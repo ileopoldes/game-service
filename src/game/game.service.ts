@@ -7,7 +7,7 @@ import { RepositoryService } from '../repository/repository.service';
 export class GameService {
   constructor(private readonly repository: RepositoryService) {}
   create(createGameDto: CreateGameDto) {
-    return 'This action adds a new game';
+    return createGameDto;
   }
 
   findAll() {
