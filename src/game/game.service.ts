@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateGameDto, UpdateGameDto } from './dto';
 import { RepositoryService } from '../repository/repository.service';
 import { Game } from '@prisma/client';
@@ -65,16 +70,52 @@ export class GameService {
     }
   }
 
-  update(id: number, updateGameDto: UpdateGameDto) {
-    console.log(
-      `>>>> Bender service: ${id} - ${JSON.stringify(updateGameDto)}`,
-    );
-    return `This action updates a #${id} game - with: ${JSON.stringify(
-      updateGameDto,
-    )}`;
+  async update(id: number, updateGameDto: UpdateGameDto) {
+    try {
+      const game = await this.repository.game.findUnique({
+        where: { id },
+      });
+
+      if (!game) {
+        throw new NotFoundException(`No game with id ${id} was found`);
+      }
+
+      if (
+        updateGameDto.publisherId &&
+        updateGameDto.publisherId !== game.publisherId
+      ) {
+        throw new BadRequestException(
+          `The publisher with id ${updateGameDto.publisherId} is not the owner of the game ${id}`,
+        );
+      }
+
+      const updatedGameData = await this.repository.game.update({
+        where: { id },
+        data: { ...updateGameDto },
+      });
+      return updatedGameData;
+    } catch (error) {
+      Logger.debug(error);
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} game`;
+  async remove(id: number) {
+    try {
+      const game = await this.repository.game.findUnique({
+        where: { id },
+      });
+
+      if (!game) {
+        throw new NotFoundException(`No game with id ${id} was found`);
+      }
+
+      await this.repository.game.delete({
+        where: { id },
+      });
+    } catch (error) {
+      Logger.debug(error);
+      throw error;
+    }
   }
 }
