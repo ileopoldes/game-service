@@ -4,6 +4,7 @@ import { GameService } from './game.service';
 import { TestUtil } from '../common/test';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { BadRequestException } from '@nestjs/common';
+import { RepositoryService } from 'src/repository/repository.service';
 
 describe('GameController', () => {
   let controller: GameController;
@@ -12,6 +13,7 @@ describe('GameController', () => {
   const findOneMock = jest.fn();
   const updateMock = jest.fn();
   const deleteMock = jest.fn();
+  const findPublisherMock = jest.fn();
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,6 +27,7 @@ describe('GameController', () => {
             findAll: findAllMock,
             update: updateMock,
             delete: deleteMock,
+            findPublisherDataByGameId: findPublisherMock,
           },
         },
       ],
@@ -39,6 +42,7 @@ describe('GameController', () => {
     findAllMock.mockReset();
     updateMock.mockReset();
     deleteMock.mockReset();
+    findPublisherMock.mockReset();
   });
 
   describe('create', () => {
@@ -71,6 +75,18 @@ describe('GameController', () => {
       const result = await controller.findOne(mockGame.id.toString());
 
       expect(result).toEqual(mockGame);
+    });
+  });
+
+  describe('findPublisherDataById', () => {
+    it('should return one game by its id', async () => {
+      const mockGame = TestUtil.giveMeAValidGameWithPublisherData();
+      const mockPublisher = TestUtil.giveMeAValidPublisher();
+      findPublisherMock.mockResolvedValue(mockPublisher);
+
+      await controller.findPublisherDataById(mockGame.id.toString());
+
+      expect(findPublisherMock).toBeCalledWith(mockGame.id);
     });
   });
 

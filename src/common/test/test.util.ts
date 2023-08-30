@@ -51,4 +51,36 @@ export class TestUtil {
 
     return game;
   }
+
+  static giveMeAValidGameWithPublisherData(): Game {
+    const publisherData: Publisher = TestUtil.giveMeAValidPublisher();
+
+    const game: Game = {
+      id: 1,
+      price: 49.99,
+      publisherId: 1,
+      releaseDate: new Date(),
+      tags: ['Action', 'Adventure'],
+      title: 'test game',
+      createdAt: null,
+      updatedAt: null,
+    };
+
+    game['publisher'] = publisherData;
+
+    return game;
+  }
+
+  static giveMeAValidPublisherModel(): Publisher {
+    const publisherData: Publisher = {
+      createdAt: null,
+      id: 1,
+      name: 'Publisher test that comes with game',
+      phone: '12341234',
+      siret: 134341234123,
+      updatedAt: null,
+    };
+
+    return publisherData;
+  }
 }

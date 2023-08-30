@@ -17,7 +17,6 @@ import { UpdateGameDto } from './dto/update-game.dto';
 
 @Controller('games')
 export class GameController {
-  //TODO - Bender - não expor o id do banco. Implementar um uuid e fazer todo relacionamento baseado nele.
   constructor(private readonly gameService: GameService) {}
 
   @Post()
@@ -30,7 +29,7 @@ export class GameController {
     return this.gameService.findAll();
   }
 
-  @Get('all/:plublisherId')
+  @Get('all/publisher/:plublisherId')
   findAllByPublisher(@Param('publisherId', ParseIntPipe) id: string) {
     return 'TODO - Bender - get games from specific publisher';
   }
@@ -40,9 +39,9 @@ export class GameController {
     return this.gameService.findOne(+id);
   }
 
-  @Get(':id/publisher')
-  findPublisherData(@Param('id', ParseIntPipe) id: string) {
-    return 'TODO - Bender - get publisher data from the game id';
+  @Get(':id/publisher-data')
+  findPublisherDataById(@Param('id', ParseIntPipe) id: string) {
+    return this.gameService.findPublisherDataByGameId(+id);
   }
 
   @Post('/start-promotion')

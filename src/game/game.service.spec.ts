@@ -134,4 +134,21 @@ describe('GameService', () => {
       );
     });
   });
+
+  describe('findPublisherDataByGameId', () => {
+    it('should throw if no game with provided id was found', async () => {
+      const gameId = 666;
+      findUniqueMock.mockResolvedValue(null);
+      await expect(
+        service.findPublisherDataByGameId(gameId),
+      ).rejects.toBeInstanceOf(NotFoundException);
+    });
+    it('should return publish data', async () => {
+      const mockGame = TestUtil.giveMeAValidGameWithPublisherData();
+      const mockPublisher = TestUtil.giveMeAValidPublisher();
+      findUniqueMock.mockResolvedValue(mockGame);
+      const result = await service.findPublisherDataByGameId(mockGame.id);
+      expect(result).toEqual(mockPublisher);
+    });
+  });
 });

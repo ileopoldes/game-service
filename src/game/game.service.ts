@@ -7,6 +7,7 @@ import {
 import { CreateGameDto, ReadGameDto, UpdateGameDto } from './dto';
 import { RepositoryService } from '../repository/repository.service';
 import { PublisherService } from '../publisher/publisher.service';
+import { ReadPublisherDto } from './dto/read-publisher.dto';
 
 @Injectable()
 export class GameService {
@@ -32,7 +33,6 @@ export class GameService {
 
   async findAll(): Promise<ReadGameDto[]> {
     try {
-      /* TODO: Bender - implemente pagination*/
       const games = await this.repository.game.findMany();
 
       if (!games) {
@@ -111,6 +111,26 @@ export class GameService {
       await this.repository.game.delete({
         where: { id },
       });
+    } catch (error) {
+      Logger.debug(error);
+      throw error;
+    }
+  }
+
+  async findPublisherDataByGameId(id: number): Promise<ReadPublisherDto> {
+    try {
+      const game = await this.repository.game.findUnique({
+        where: {
+          id,
+        },
+        include: { publisher: true },
+      });
+
+      if (!game) {
+        throw new NotFoundException(`No game with id ${id} was found`);
+      }
+
+      return game.publisher;
     } catch (error) {
       Logger.debug(error);
       throw error;
