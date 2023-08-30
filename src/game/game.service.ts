@@ -4,7 +4,6 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { Game } from '@prisma/client';
 import { CreateGameDto, ReadGameDto, UpdateGameDto } from './dto';
 import { RepositoryService } from '../repository/repository.service';
 import { PublisherService } from '../publisher/publisher.service';
@@ -66,7 +65,10 @@ export class GameService {
     }
   }
 
-  async update(id: number, updateGameDto: UpdateGameDto) {
+  async update(
+    id: number,
+    updateGameDto: UpdateGameDto,
+  ): Promise<UpdateGameDto> {
     try {
       const game = await this.repository.game.findUnique({
         where: { id },

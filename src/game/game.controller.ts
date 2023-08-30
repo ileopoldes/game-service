@@ -56,9 +56,8 @@ export class GameController {
     @Body() updateGameDto: UpdateGameDto,
   ) {
     const hasAtLeastOneField = Object.keys(updateGameDto).some(
-      (key) => updateGameDto[key] !== undefined,
+      (key) => updateGameDto[key] !== null && updateGameDto[key] !== undefined,
     );
-    // TODO - Bender - criar unit test para verificar isto aqui
     if (!hasAtLeastOneField) {
       throw new BadRequestException('At least one field should be provided');
     }
