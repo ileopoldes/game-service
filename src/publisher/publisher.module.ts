@@ -3,5 +3,6 @@ import { PublisherService } from './publisher.service';
 
 @Module({
   providers: [PublisherService],
+  exports: [PublisherService],
 })
 export class PublisherModule {}

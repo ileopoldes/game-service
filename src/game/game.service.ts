@@ -4,24 +4,20 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateGameDto, UpdateGameDto } from './dto';
-import { RepositoryService } from '../repository/repository.service';
 import { Game } from '@prisma/client';
+import { CreateGameDto, ReadGameDto, UpdateGameDto } from './dto';
+import { RepositoryService } from '../repository/repository.service';
+import { PublisherService } from '../publisher/publisher.service';
 
 @Injectable()
 export class GameService {
-  constructor(private readonly repository: RepositoryService) {}
+  constructor(
+    private readonly repository: RepositoryService,
+    private readonly publisherService: PublisherService,
+  ) {}
   async create(createGameDto: CreateGameDto): Promise<CreateGameDto> {
     try {
-      const publisher = await this.repository.publisher.findUnique({
-        where: {
-          id: createGameDto.publisherId,
-        },
-      });
-
-      if (!publisher) {
-        throw new NotFoundException('Publisher not found');
-      }
+      await this.publisherService.isValidPublisher(createGameDto.publisherId);
 
       const game = await this.repository.game.create({
         data: {
@@ -35,7 +31,7 @@ export class GameService {
     }
   }
 
-  async findAll(): Promise<Game[]> {
+  async findAll(): Promise<ReadGameDto[]> {
     try {
       /* TODO: Bender - implemente pagination*/
       const games = await this.repository.game.findMany();
@@ -51,7 +47,7 @@ export class GameService {
     }
   }
 
-  async findOne(id: number): Promise<Game> {
+  async findOne(id: number): Promise<ReadGameDto> {
     try {
       const game = await this.repository.game.findUnique({
         where: {

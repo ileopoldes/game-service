@@ -28,7 +28,6 @@ services:
       - 3000:3000
     depends_on:
       - dev-game-db
-      - test-game-db
     environment:
       - NODE_ENV=development
     networks:
