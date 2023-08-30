@@ -10,5 +10,28 @@ services:
       - POSTGRES_DB=ultra_game
     networks:
       - ultra-game-net
+  test-game-db:
+    image: postgres:13
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=ultra_game
+    networks:
+      - ultra-game-net
+  jest-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - dev-game-db
+      - test-game-db
+    environment:
+      - NODE_ENV=development
+    networks:
+      - ultra-game-net
 networks:
   ultra-game-net:
