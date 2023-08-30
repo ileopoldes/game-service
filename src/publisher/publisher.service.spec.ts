@@ -39,12 +39,30 @@ describe('PublisherService', () => {
       const publisher = await service.findPublisherById(1);
       expect(publisher).toEqual(publisher);
       expect(findUniqueMock).toHaveBeenCalledTimes(1);
+      expect(findUniqueMock).toHaveBeenCalledWith({
+        where: {
+          id: 1,
+        },
+      });
     });
     it('should throw if user not found', async () => {
       findUniqueMock.mockResolvedValue(null);
       await expect(service.findPublisherById(666)).rejects.toBeInstanceOf(
         NotFoundException,
       );
+    });
+    it('should have game data if flag is true', async () => {
+      const publisherMock = TestUtil.giveMeAValidPublisher();
+      findUniqueMock.mockResolvedValue(publisherMock);
+      await service.findPublisherById(1, true);
+
+      expect(findUniqueMock).toHaveBeenCalledTimes(1);
+      expect(findUniqueMock).toHaveBeenCalledWith({
+        where: {
+          id: 1,
+        },
+        include: { games: true },
+      });
     });
   });
 

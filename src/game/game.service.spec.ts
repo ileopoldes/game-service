@@ -12,12 +12,20 @@ describe('GameService', () => {
   const findManyMock = jest.fn();
   const updateMock = jest.fn();
   const deleteMock = jest.fn();
+  const findPublisherByIdMock = jest.fn();
+  const isValidPublisherMock = jest.fn();
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GameService,
-        PublisherService,
+        {
+          provide: PublisherService,
+          useValue: {
+            findPublisherById: findPublisherByIdMock,
+            isValidPublisher: isValidPublisherMock,
+          },
+        },
         {
           provide: RepositoryService,
           useValue: {
@@ -45,6 +53,8 @@ describe('GameService', () => {
     findManyMock.mockReset();
     updateMock.mockReset();
     deleteMock.mockReset();
+    findPublisherByIdMock.mockReset();
+    isValidPublisherMock.mockReset();
   });
 
   describe('create', () => {
@@ -52,6 +62,7 @@ describe('GameService', () => {
       const mockGame = TestUtil.giveMeAValidCreateGameDTO();
       const mockPublisher = TestUtil.giveMeAValidPublisher();
       findUniqueMock.mockResolvedValue(mockPublisher);
+      isValidPublisherMock.mockResolvedValue(true);
       createMock.mockResolvedValue(mockGame);
       const result = await service.create(mockGame);
       expect(result).toBe(mockGame);
@@ -149,6 +160,25 @@ describe('GameService', () => {
       findUniqueMock.mockResolvedValue(mockGame);
       const result = await service.findPublisherDataByGameId(mockGame.id);
       expect(result).toEqual(mockPublisher);
+    });
+  });
+
+  describe('findAllGamesByPublisherId', () => {
+    it('should return a list of games', async () => {
+      const mockPublisher = TestUtil.giveMeAValidPublisherWithGames();
+      const games = mockPublisher.games;
+      findPublisherByIdMock.mockResolvedValue(mockPublisher);
+      const result = await service.findAllGamesByPublisherId(mockPublisher.id);
+      expect(result).toHaveLength(1);
+      expect(result).toEqual(games);
+      expect(findPublisherByIdMock).toBeCalledWith(mockPublisher.id, true);
+    });
+    it('should throw if there is no games', async () => {
+      const mockPublisher = TestUtil.giveMeAValidPublisherWithEmptyGames();
+      findPublisherByIdMock.mockResolvedValue(mockPublisher);
+      await expect(
+        service.findAllGamesByPublisherId(mockPublisher.id),
+      ).rejects.toBeInstanceOf(NotFoundException);
     });
   });
 });

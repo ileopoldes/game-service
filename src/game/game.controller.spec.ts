@@ -14,6 +14,7 @@ describe('GameController', () => {
   const updateMock = jest.fn();
   const deleteMock = jest.fn();
   const findPublisherMock = jest.fn();
+  const findAllGamesByPublisherMock = jest.fn();
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -28,6 +29,7 @@ describe('GameController', () => {
             update: updateMock,
             delete: deleteMock,
             findPublisherDataByGameId: findPublisherMock,
+            findAllGamesByPublisherId: findAllGamesByPublisherMock,
           },
         },
       ],
@@ -43,6 +45,7 @@ describe('GameController', () => {
     updateMock.mockReset();
     deleteMock.mockReset();
     findPublisherMock.mockReset();
+    findAllGamesByPublisherMock.mockReset();
   });
 
   describe('create', () => {
@@ -79,7 +82,7 @@ describe('GameController', () => {
   });
 
   describe('findPublisherDataById', () => {
-    it('should return one game by its id', async () => {
+    it('should call the service with the provided id', async () => {
       const mockGame = TestUtil.giveMeAValidGameWithPublisherData();
       const mockPublisher = TestUtil.giveMeAValidPublisher();
       findPublisherMock.mockResolvedValue(mockPublisher);
@@ -87,6 +90,18 @@ describe('GameController', () => {
       await controller.findPublisherDataById(mockGame.id.toString());
 
       expect(findPublisherMock).toBeCalledWith(mockGame.id);
+    });
+  });
+
+  describe('findAllByPublisher', () => {
+    it('should call the service with the provided id', async () => {
+      const mockGameList = [TestUtil.giveMeAValidReadGameDTO()];
+      const publisherId: number = mockGameList[0].publisherId;
+      findAllGamesByPublisherMock.mockReturnValue(mockGameList);
+
+      await controller.findAllByPublisher(publisherId.toString());
+
+      expect(findAllGamesByPublisherMock).toBeCalledWith(publisherId);
     });
   });
 

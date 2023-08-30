@@ -29,9 +29,9 @@ export class GameController {
     return this.gameService.findAll();
   }
 
-  @Get('all/publisher/:plublisherId')
-  findAllByPublisher(@Param('publisherId', ParseIntPipe) id: string) {
-    return 'TODO - Bender - get games from specific publisher';
+  @Get('all/publisher/:id')
+  findAllByPublisher(@Param('id', ParseIntPipe) id: string) {
+    return this.gameService.findAllGamesByPublisherId(+id);
   }
 
   @Get(':id')
@@ -39,7 +39,7 @@ export class GameController {
     return this.gameService.findOne(+id);
   }
 
-  @Get(':id/publisher-data')
+  @Get(':id/publisher')
   findPublisherDataById(@Param('id', ParseIntPipe) id: string) {
     return this.gameService.findPublisherDataByGameId(+id);
   }

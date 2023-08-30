@@ -8,6 +8,7 @@ import { CreateGameDto, ReadGameDto, UpdateGameDto } from './dto';
 import { RepositoryService } from '../repository/repository.service';
 import { PublisherService } from '../publisher/publisher.service';
 import { ReadPublisherDto } from './dto/read-publisher.dto';
+import { Game, Publisher } from '@prisma/client';
 
 @Injectable()
 export class GameService {
@@ -135,5 +136,18 @@ export class GameService {
       Logger.debug(error);
       throw error;
     }
+  }
+
+  async findAllGamesByPublisherId(publisherId: number): Promise<Game[]> {
+    const publisher = await this.publisherService.findPublisherById(
+      publisherId,
+      true,
+    );
+
+    if (!publisher.games || publisher.games.length === 0) {
+      throw new NotFoundException('No games was found for the given publisher');
+    }
+
+    return publisher.games;
   }
 }

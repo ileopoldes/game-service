@@ -1,5 +1,6 @@
 import { Game, Publisher } from '@prisma/client';
 import { CreateGameDto, ReadGameDto, UpdateGameDto } from '../../game/dto';
+import { PublisherWithGames } from 'src/publisher/model';
 
 export class TestUtil {
   static giveMeAValidPublisher(): Publisher {
@@ -82,5 +83,37 @@ export class TestUtil {
     };
 
     return publisherData;
+  }
+
+  static giveMeAValidPublisherWithGames(): PublisherWithGames {
+    const publisherData = TestUtil.giveMeAValidPublisherModel();
+    const publisher: PublisherWithGames = {
+      ...publisherData,
+      games: [TestUtil.giveMeAValidGameModel()],
+    };
+
+    return publisher;
+  }
+
+  static giveMeAValidPublisherWithEmptyGames(): PublisherWithGames {
+    const publisherData = TestUtil.giveMeAValidPublisherModel();
+    const publisher: PublisherWithGames = {
+      ...publisherData,
+      games: [],
+    };
+
+    return publisher;
+  }
+
+  static giveMeAValidGameModel(): Game {
+    const game = TestUtil.giveMeAValidReadGameDTO();
+    const gameModel: Game = {
+      ...game,
+      createdAt: null,
+      updatedAt: null,
+      id: 1,
+    };
+
+    return gameModel;
   }
 }
