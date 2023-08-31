@@ -81,6 +81,12 @@ The application can also be run using Docker. Use the following commands to set 
   $ yarn redis:up
   ```
 
+  - **NestJs App + Database and Redis:**
+  ```bash
+  $ docker compose up
+  ```
+
+
 ## Endpoints
 
 - **POST /games:** Create a new game.
@@ -91,10 +97,6 @@ The application can also be run using Docker. Use the following commands to set 
 - **POST /games/start-promotion:** Apply a discount to games.
 - **PATCH /games/:id:** Update a game's information.
 - **DELETE /games/:id:** Delete a game.
-
-## Support
-
-This project is MIT-licensed and open-source. If you find it helpful, consider supporting its development by becoming a backer or sponsor on [Open Collective](https://docs.nestjs.com/support).
 
 ## Stay in Touch
 
