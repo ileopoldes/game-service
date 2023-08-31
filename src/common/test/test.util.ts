@@ -22,6 +22,12 @@ export class TestUtil {
     return publisher;
   }
 
+  static giveMeAValidPublisherDto(): Publisher {
+    const publisher = TestUtil.giveMeAValidPublisher();
+    delete publisher.id;
+    return publisher;
+  }
+
   static giveMeAValidCreateGameDTO(): CreateGameDto {
     const game: CreateGameDto = {
       price: 49.99,
@@ -31,6 +37,14 @@ export class TestUtil {
       title: 'test game',
     };
 
+    return game;
+  }
+
+  static giveMeAnInvalidCreateGameDTO(): CreateGameDto {
+    const game: CreateGameDto = {
+      ...TestUtil.giveMeAValidCreateGameDTO(),
+    };
+    game.publisherId = 666;
     return game;
   }
 
@@ -82,7 +96,7 @@ export class TestUtil {
     const publisherData: Publisher = {
       createdAt: null,
       id: 1,
-      name: 'Publisher test that comes with game',
+      name: 'Publisher test',
       phone: '12341234',
       siret: 134341234123,
       updatedAt: null,

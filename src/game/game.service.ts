@@ -41,8 +41,7 @@ export class GameService {
   async findAll(): Promise<ReadGameDto[]> {
     try {
       const games = await this.repository.game.findMany();
-
-      if (!games) {
+      if (!games || games.length === 0) {
         throw new NotFoundException('No records found');
       }
 
@@ -110,8 +109,9 @@ export class GameService {
       const game = await this.repository.game.findUnique({
         where: { id },
       });
+      console.log(`>>>> Bender -> ${JSON.stringify(game)}`);
 
-      if (!game) {
+      if (!game || game === null) {
         throw new NotFoundException(`No game with id ${id} was found`);
       }
 
