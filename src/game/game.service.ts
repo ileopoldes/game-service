@@ -162,7 +162,11 @@ export class GameService {
     this.applyDiscountJobService.applyDiscount(jobDto);
   }
 
-  async deleteWithReleaseDateOlderThan(months: number) {}
+  async deleteWithReleaseDateOlderThan(months: number) {
+    console.log(`>>> Bender - deletando: ${months}`);
+  }
 
-  async applyDiscount(percentual: number, endMonth: number) {}
+  async applyDiscount(percentual: number, endMonth: number) {
+    console.log(`>>>> Bender discount: ${percentual} - ${endMonth}`);
+  }
 }

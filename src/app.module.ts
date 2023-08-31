@@ -20,9 +20,9 @@ import { GlobalExceptionFilter } from './middlewares/global-exception.filter';
       }),
       inject: [ConfigService],
     }),
+    RepositoryModule,
     PublisherModule,
     GameModule,
-    RepositoryModule,
   ],
   providers: [{ provide: APP_FILTER, useClass: GlobalExceptionFilter }],
 })

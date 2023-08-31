@@ -4,6 +4,7 @@ import { GameController } from './game.controller';
 import { PublisherService } from '../publisher/publisher.service';
 import {
   ApplyDiscountProducerService,
+  RemoveOldGamesConsumerService,
   RemoveOldGamesProducerService,
 } from 'src/jobs';
 import { BullModule } from '@nestjs/bull';

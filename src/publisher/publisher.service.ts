@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Publisher } from '@prisma/client';
 import { RepositoryService } from '../repository/repository.service';
 import { PublisherWithGames } from './model';
 
