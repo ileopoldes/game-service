@@ -4,6 +4,10 @@ import { RepositoryService } from '../repository/repository.service';
 import { TestUtil } from '../common/test';
 import { PublisherService } from '../publisher/publisher.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  ApplyDiscountProducerService,
+  RemoveOldGamesProducerService,
+} from '../jobs';
 
 describe('GameService', () => {
   let service: GameService;
@@ -14,6 +18,8 @@ describe('GameService', () => {
   const deleteMock = jest.fn();
   const findPublisherByIdMock = jest.fn();
   const isValidPublisherMock = jest.fn();
+  const startCleaningMock = jest.fn();
+  const applyDiscountMock = jest.fn();
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -41,6 +47,18 @@ describe('GameService', () => {
             },
           },
         },
+        {
+          provide: RemoveOldGamesProducerService,
+          useValue: {
+            startCleaning: startCleaningMock,
+          },
+        },
+        {
+          provide: ApplyDiscountProducerService,
+          useValue: {
+            applyDiscount: applyDiscountMock,
+          },
+        },
       ],
     }).compile();
 
@@ -55,6 +73,8 @@ describe('GameService', () => {
     deleteMock.mockReset();
     findPublisherByIdMock.mockReset();
     isValidPublisherMock.mockReset();
+    startCleaningMock.mockReset();
+    applyDiscountMock.mockReset();
   });
 
   describe('create', () => {
@@ -179,6 +199,15 @@ describe('GameService', () => {
       await expect(
         service.findAllGamesByPublisherId(mockPublisher.id),
       ).rejects.toBeInstanceOf(NotFoundException);
+    });
+  });
+
+  describe('startJob', () => {
+    it('should call the remove old games and the apply discount producers', async () => {
+      const dto = TestUtil.giveMeAJobDto();
+      await service.startJob(dto);
+      expect(startCleaningMock).toBeCalledWith(dto.totalMonth);
+      expect(applyDiscountMock).toBeCalledWith(dto);
     });
   });
 });

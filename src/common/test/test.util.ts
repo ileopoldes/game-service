@@ -1,6 +1,12 @@
 import { Game, Publisher } from '@prisma/client';
-import { CreateGameDto, ReadGameDto, UpdateGameDto } from '../../game/dto';
+import {
+  CreateGameDto,
+  JobDto,
+  ReadGameDto,
+  UpdateGameDto,
+} from '../../game/dto';
 import { PublisherWithGames } from 'src/publisher/model';
+import { Job } from 'bull';
 
 export class TestUtil {
   static giveMeAValidPublisher(): Publisher {
@@ -115,5 +121,14 @@ export class TestUtil {
     };
 
     return gameModel;
+  }
+
+  static giveMeAJobDto(): JobDto {
+    const job: JobDto = {
+      discount: 20,
+      totalMonth: 18,
+    };
+
+    return job;
   }
 }

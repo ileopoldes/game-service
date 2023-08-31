@@ -15,6 +15,7 @@ describe('GameController', () => {
   const deleteMock = jest.fn();
   const findPublisherMock = jest.fn();
   const findAllGamesByPublisherMock = jest.fn();
+  const startJobMock = jest.fn();
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,6 +31,7 @@ describe('GameController', () => {
             delete: deleteMock,
             findPublisherDataByGameId: findPublisherMock,
             findAllGamesByPublisherId: findAllGamesByPublisherMock,
+            startJob: startJobMock,
           },
         },
       ],
@@ -46,6 +48,7 @@ describe('GameController', () => {
     deleteMock.mockReset();
     findPublisherMock.mockReset();
     findAllGamesByPublisherMock.mockReset();
+    startJobMock.mockReset();
   });
 
   describe('create', () => {
@@ -124,6 +127,14 @@ describe('GameController', () => {
         expect(error).toBeInstanceOf(BadRequestException);
         expect(error.message).toEqual('At least one field should be provided');
       }
+    });
+
+    describe('applyDiscount', () => {
+      it('should call the service to trigger the process', async () => {
+        const jobDto = TestUtil.giveMeAJobDto();
+        await controller.applyDiscount(jobDto);
+        expect(startJobMock).toBeCalledWith(jobDto);
+      });
     });
   });
 });

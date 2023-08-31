@@ -14,6 +14,7 @@ import {
 import { GameService } from './game.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
+import { JobDto } from './dto';
 
 @Controller('games')
 export class GameController {
@@ -44,9 +45,10 @@ export class GameController {
     return this.gameService.findPublisherDataByGameId(+id);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/start-promotion')
-  applyDiscount() {
-    return 'TODO - Bender - remove the games having a release date older than 18 months and apply a discount of 20% to all games having a release date between 12 and 18 months'
+  applyDiscount(@Body() job: JobDto) {
+    return this.gameService.startJob(job);
   }
 
   @Patch(':id')

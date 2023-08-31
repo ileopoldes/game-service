@@ -4,17 +4,23 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateGameDto, ReadGameDto, UpdateGameDto } from './dto';
+import { CreateGameDto, JobDto, ReadGameDto, UpdateGameDto } from './dto';
 import { RepositoryService } from '../repository/repository.service';
 import { PublisherService } from '../publisher/publisher.service';
 import { ReadPublisherDto } from './dto/read-publisher.dto';
-import { Game, Publisher } from '@prisma/client';
+import { Game } from '@prisma/client';
+import {
+  ApplyDiscountProducerService,
+  RemoveOldGamesProducerService,
+} from '../jobs';
 
 @Injectable()
 export class GameService {
   constructor(
     private readonly repository: RepositoryService,
     private readonly publisherService: PublisherService,
+    private readonly removeOldGamesJobService: RemoveOldGamesProducerService,
+    private readonly applyDiscountJobService: ApplyDiscountProducerService,
   ) {}
   async create(createGameDto: CreateGameDto): Promise<CreateGameDto> {
     try {
@@ -150,4 +156,13 @@ export class GameService {
 
     return publisher.games;
   }
+
+  async startJob(jobDto: JobDto) {
+    this.removeOldGamesJobService.startCleaning(jobDto.totalMonth);
+    this.applyDiscountJobService.applyDiscount(jobDto);
+  }
+
+  async deleteWithReleaseDateOlderThan(months: number) {}
+
+  async applyDiscount(percentual: number, endMonth: number) {}
 }
