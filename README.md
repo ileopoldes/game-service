@@ -60,9 +60,16 @@ Run tests to ensure the integrity of the codebase:
   ```
 
 - **Test Coverage:**
+
   ```bash
   $ yarn run test:cov
   ```
+
+- **Seeding Script:**
+
+```bash
+  $ yarn run db:seed
+```
 
 ## Docker Setup
 
@@ -76,16 +83,21 @@ The application can also be run using Docker. Use the following commands to set 
   ```
 
 - **Testing Database and Redis:**
+
   ```bash
   $ yarn db:test:up
   $ yarn redis:up
   ```
 
   - **NestJs App + Database and Redis:**
+
   ```bash
   $ docker compose up
   ```
 
+## Documentation
+
+Swagger document page is available at `http://localhost:3000/api`
 
 ## Endpoints
 
@@ -110,6 +122,8 @@ This project is [MIT licensed](LICENSE).
 ## Project Evaluation
 
 As a passionate Software Engineer with extensive experience in Node.js, I found this coding exercise to be an exciting opportunity to showcase my skills and learn something new. While I had worked extensively with Node.js using the Express, this project introduced me to NestJS, and I must say it was a delightful experience. It highlighted my ability to adapt, learn, and deliver in a new technology ecosystem.
+
+While the task involved creating a microservice, I chose to implement a REST application instead of utilizing a dedicated microservices package. The decision was driven by the lack of necessity to introduce additional complexity to the architecture. Since there wasn't a requirement for different communication protocols, opting for a RESTful approach allowed me to keep the design straightforward and efficient without introducing unnecessary layers.
 
 In order to automate the removal of games with a release date older than 18 months and apply a 20% discount to games released between 12 and 18 months, I opted to leverage the BullModule from @nestjs/bull. This module enables seamless integration with Redis and facilitates the asynchronous execution of jobs without being dependent on immediate responses. Given that these processes could potentially involve substantial demands, this approach proves more suitable. The resulting implementation is straightforward, focusing on the core functionality and omitting advanced error-handling mechanisms. This choice reflects a decision to prioritize simplicity while showcasing the strategic reasoning behind it.
 

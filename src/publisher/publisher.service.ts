@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RepositoryService } from '../repository/repository.service';
 import { PublisherWithGames } from './model';
+import { ReadPublisherDto } from 'src/game/dto/read-publisher.dto';
 
 @Injectable()
 export class PublisherService {
@@ -32,5 +33,17 @@ export class PublisherService {
     }
 
     return publisher;
+  }
+
+  async createTestPublisher(dto: ReadPublisherDto) {
+    const publisher = await this.repository.publisher.create({
+      data: { ...dto },
+    });
+    return publisher;
+  }
+
+  async findAll() {
+    const publishers = await this.repository.publisher.findMany();
+    return publishers;
   }
 }

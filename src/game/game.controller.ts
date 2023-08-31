@@ -11,11 +11,13 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { GameService } from './game.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { JobDto } from './dto';
 
+@ApiTags('games')
 @Controller('games')
 export class GameController {
   constructor(private readonly gameService: GameService) {}
