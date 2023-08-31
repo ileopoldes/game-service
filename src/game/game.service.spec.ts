@@ -20,6 +20,7 @@ describe('GameService', () => {
   const isValidPublisherMock = jest.fn();
   const startCleaningMock = jest.fn();
   const applyDiscountMock = jest.fn();
+  const deleteManyMock = jest.fn();
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,6 +31,7 @@ describe('GameService', () => {
           useValue: {
             findPublisherById: findPublisherByIdMock,
             isValidPublisher: isValidPublisherMock,
+            deleteMany: deleteManyMock,
           },
         },
         {
@@ -75,6 +77,7 @@ describe('GameService', () => {
     isValidPublisherMock.mockReset();
     startCleaningMock.mockReset();
     applyDiscountMock.mockReset();
+    deleteManyMock.mockReset();
   });
 
   describe('create', () => {
@@ -209,5 +212,27 @@ describe('GameService', () => {
       expect(startCleaningMock).toBeCalledWith(dto.totalMonth);
       expect(applyDiscountMock).toBeCalledWith(dto);
     });
+  });
+
+  describe('deleteWithReleaseDateOlderThan', () => {
+    it.todo('should apply discount');
+    /*
+    it('should delete games with release date older than given months', async () => {
+      const months = 18;
+      const deletedCount = 5;
+      deleteManyMock.mockResolvedValue({ count: deletedCount });
+
+      const result = await service.deleteWithReleaseDateOlderThan(months);
+
+      expect(result).toBe(deletedCount);
+      expect(deleteManyMock).toHaveBeenCalledWith({
+        where: {
+          releaseDate: {
+            lt: expect.any(Date),
+          },
+        },
+      });
+    });
+    */
   });
 });

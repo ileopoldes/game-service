@@ -109,6 +109,8 @@ This project is [MIT licensed](LICENSE).
 
 As a passionate Software Engineer with extensive experience in Node.js, I found this coding exercise to be an exciting opportunity to showcase my skills and learn something new. While I had worked extensively with Node.js using the Express, this project introduced me to NestJS, and I must say it was a delightful experience. It highlighted my ability to adapt, learn, and deliver in a new technology ecosystem.
 
+In order to automate the removal of games with a release date older than 18 months and apply a 20% discount to games released between 12 and 18 months, I opted to leverage the BullModule from @nestjs/bull. This module enables seamless integration with Redis and facilitates the asynchronous execution of jobs without being dependent on immediate responses. Given that these processes could potentially involve substantial demands, this approach proves more suitable. The resulting implementation is straightforward, focusing on the core functionality and omitting advanced error-handling mechanisms. This choice reflects a decision to prioritize simplicity while showcasing the strategic reasoning behind it.
+
 ### Key Takeaways
 
 1. **Adapting to NestJS:**
