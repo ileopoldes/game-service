@@ -8,7 +8,7 @@ import { CreateGameDto, JobDto, ReadGameDto, UpdateGameDto } from './dto';
 import { RepositoryService } from '../repository/repository.service';
 import { PublisherService } from '../publisher/publisher.service';
 import { ReadPublisherDto } from './dto/read-publisher.dto';
-import { Game } from '@prisma/client';
+import { Game, Prisma } from '@prisma/client';
 import {
   ApplyDiscountProducerService,
   RemoveOldGamesProducerService,
@@ -162,10 +162,45 @@ export class GameService {
   }
 
   async deleteWithReleaseDateOlderThan(months: number) {
-    console.log(`>>> Bender - deletando: ${months}`);
+    try {
+      const periodAgo = new Date();
+      periodAgo.setMonth(periodAgo.getMonth() - months);
+      const total = await this.repository.game.deleteMany({
+        where: {
+          releaseDate: {
+            lt: periodAgo,
+          },
+        },
+      });
+      return total.count;
+    } catch (error) {
+      Logger.debug(error);
+    }
   }
 
   async applyDiscount(percentual: number, endMonth: number) {
-    console.log(`>>>> Bender discount: ${percentual} - ${endMonth}`);
+    try {
+      const twelveMonthAgo = new Date();
+      twelveMonthAgo.setMonth(twelveMonthAgo.getMonth() - 12);
+      const periodAgo = new Date();
+      periodAgo.setMonth(periodAgo.getMonth() - endMonth);
+
+      const updatedGames = await this.repository.game.updateMany({
+        where: {
+          releaseDate: {
+            gte: twelveMonthAgo,
+            lte: periodAgo,
+          },
+        },
+        data: {
+          price: {
+            multiply: 1 - percentual / 100,
+          },
+        },
+      });
+      return updatedGames.count;
+    } catch (error) {
+      Logger.debug(error);
+    }
   }
 }
