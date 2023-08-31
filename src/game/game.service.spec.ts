@@ -7,7 +7,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import {
   ApplyDiscountProducerService,
   RemoveOldGamesProducerService,
-} from '../jobs';
+} from './jobs';
 
 describe('GameService', () => {
   let service: GameService;

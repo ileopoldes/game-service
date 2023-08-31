@@ -12,7 +12,7 @@ import { Game } from '@prisma/client';
 import {
   ApplyDiscountProducerService,
   RemoveOldGamesProducerService,
-} from '../jobs';
+} from './jobs';
 
 @Injectable()
 export class GameService {
@@ -109,7 +109,6 @@ export class GameService {
       const game = await this.repository.game.findUnique({
         where: { id },
       });
-      console.log(`>>>> Bender -> ${JSON.stringify(game)}`);
 
       if (!game || game === null) {
         throw new NotFoundException(`No game with id ${id} was found`);

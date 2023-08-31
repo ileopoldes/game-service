@@ -3,26 +3,34 @@ import { GameService } from './game.service';
 import { GameController } from './game.controller';
 import { PublisherService } from '../publisher/publisher.service';
 import {
+  CLEAN_OLD_GAME_QUEUE,
+  DISCOUNT_QUEUE,
   ApplyDiscountProducerService,
   RemoveOldGamesProducerService,
-} from '../jobs';
+  RemoveOldGamesConsumerService,
+  ApplyDiscountConsumerService,
+} from './jobs';
 import { BullModule } from '@nestjs/bull';
+import { GameServiceFactory } from './game.service.factory';
 
 @Module({
   imports: [
     BullModule.registerQueue({
-      name: 'clean-old-games-queue',
+      name: CLEAN_OLD_GAME_QUEUE,
     }),
     BullModule.registerQueue({
-      name: 'apply-discount-queue',
+      name: DISCOUNT_QUEUE,
     }),
   ],
   controllers: [GameController],
   providers: [
     GameService,
+    GameServiceFactory,
     PublisherService,
     RemoveOldGamesProducerService,
+    RemoveOldGamesConsumerService,
     ApplyDiscountProducerService,
+    ApplyDiscountConsumerService,
   ],
   exports: [GameService],
 })

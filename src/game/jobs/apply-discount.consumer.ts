@@ -1,16 +1,18 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
-import { GameService } from '../game/game.service';
 import { JobDto } from 'src/game/dto';
+import { DISCOUNT_JOB, DISCOUNT_QUEUE } from './constants';
+import { GameServiceFactory } from '../game.service.factory';
 
-@Processor('apply-discount-queue')
+@Processor(DISCOUNT_QUEUE)
 export class ApplyDiscountConsumerService {
-  constructor(private readonly gameService: GameService) {}
-  @Process('apply-discount-job')
+  constructor(private readonly gameServiceFactory: GameServiceFactory) {}
+  @Process(DISCOUNT_JOB)
   async applyDicount(job: Job<JobDto>) {
     const { data } = job;
-    const result = await this.gameService.applyDiscount(
+    const gameService = this.gameServiceFactory.createGameService();
+    const result = await gameService.applyDiscount(
       data.discount,
       data.totalMonth,
     );

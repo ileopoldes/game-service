@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RemoveOldGamesConsumerService } from './remove-old-games.consumer';
-import { GameService } from '../game/game.service';
+import { GameService } from '../game.service';
 
 describe('RemoveOldGamesConsumerService', () => {
   let service: RemoveOldGamesConsumerService;

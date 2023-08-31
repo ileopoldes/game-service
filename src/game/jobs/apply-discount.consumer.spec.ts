@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApplyDiscountConsumerService } from './apply-discount.consumer';
-import { GameService } from '../game/game.service';
+import { GameService } from '../game.service';
 
 describe('ApplyDiscountConsumerService', () => {
   let service: ApplyDiscountConsumerService;
